@@ -1,0 +1,90 @@
+﻿<Window x:Class="FractionalSorting.Visualization.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FractionalSorting.Visualization"
+        xmlns:vm="clr-namespace:FractionalSorting.Visualization.ViewModels"
+        mc:Ignorable="d" MinWidth="360" MinHeight="300"
+        Title="Sorting visualization" Height="600" Width="800">
+    <d:DataContext>
+        <vm:DesignTimeViewModel />
+    </d:DataContext>
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Border x:Name="PartitionBorder"                
+                BorderThickness="2"
+                BorderBrush="Green" 
+                Margin="-2"
+                Visibility="{Binding QuickSortPartitionRectVisibility}"
+                Background="#FFFAFAFA">
+        </Border>
+        <ItemsControl x:Name="BarsPresenter"
+                      ItemsSource="{Binding SortingBars}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding SortingBars.Count}" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.Background>
+                            <SolidColorBrush Color="{Binding Background}"/>
+                        </Grid.Background>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{Binding ComplementalHeight}"/>
+                            <RowDefinition Height="{Binding Height}"/>
+                            <RowDefinition Height="24"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Row="1" Grid.RowSpan="2" 
+                                   StrokeThickness="2"
+                                   Margin="2"
+                                   ToolTip="{Binding RawValue}">
+                            <Rectangle.Stroke>
+                                <SolidColorBrush Color="{Binding BorderColor}"/>
+                            </Rectangle.Stroke>
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{Binding Fill}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Grid Grid.Row="1" MinHeight="28" Margin="0 12 0 0">
+            <ComboBox ItemsSource="{Binding SortAlgorithms}" 
+                      SelectedIndex="{Binding SelectedAlgorithmIndex, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedAlgorithm, Mode=OneWay}"
+                      IsEnabled="{Binding IsInteractable}"
+                      DisplayMemberPath="Name" 
+                      HorizontalAlignment="Left" 
+                      VerticalContentAlignment="Center"
+                      MinWidth="100"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button MinWidth="32" 
+                        Command="{Binding ReloadCommand}" 
+                        IsEnabled="{Binding IsInteractable}"
+                        Content="&#x2B6F;"
+                        ToolTip="Reload"/>
+                <Button MinWidth="32" Margin="8 0 24 0" 
+                        Command="{Binding RunCommand}"
+                        Content="&#x25B6;"
+                        ToolTip="Run to complete"/>
+                <Button MinWidth="32" Margin="0 0 8 0" 
+                        Command="{Binding PreviousCommand}" 
+                        IsEnabled="{Binding IsInteractable}"
+                        Content="&#x2B9C;"
+                        ToolTip="Previous step"/>
+                <Button MinWidth="32" 
+                        Command="{Binding NextCommand}" 
+                        IsEnabled="{Binding IsInteractable}"
+                        Content="&#x2B9E;"
+                        ToolTip="Next step"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
